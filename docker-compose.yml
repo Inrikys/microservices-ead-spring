@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+
+  ead-authuser:
+    image: postgres:latest
+    container_name: ead-authuser
+    networks:
+      - ead
+    environment:
+      - POSTGRES_DB=ead-authuser
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=banco123
+    ports:
+      - 5432:5432
+
+networks:
+  ead:
+    driver: bridge

@@ -35,7 +35,7 @@ public class UserModel implements Serializable {
     private String password;
 
     @Column(nullable = false, length = 150)
-    private String fullname;
+    private String fullName;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -77,8 +77,8 @@ public class UserModel implements Serializable {
         return password;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
     public UserStatus getUserStatus() {

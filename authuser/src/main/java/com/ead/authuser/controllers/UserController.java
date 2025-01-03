@@ -6,19 +6,16 @@ import com.ead.authuser.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
+//@CrossOrigin(origins = "*", maxAge = 3600) // config global em ResolverConfig
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +26,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(
-           //@PageableDefault(page = 0, size = 3, sort = "userId", direction = Sort.Direction.ASC)
+           //@PageableDefault(page = 0, size = 3, sort = "userId", direction = Sort.Direction.ASC) // config global em ResolverConfig
             Pageable pageable) {
         Page<UserModel> userModelPage = userService.findAll(pageable);
         return ResponseEntity.ok(userModelPage);

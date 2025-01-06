@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/users")
 //@CrossOrigin(origins = "*", maxAge = 3600) // config global em ResolverConfig
@@ -31,6 +34,13 @@ public class UserController {
             SpecificationTemplate.UserSpec spec, Pageable pageable) {
 
         Page<UserModel> userModelPage = userService.findAll(spec, pageable);
+
+        if (!userModelPage.isEmpty()) {
+            for(UserModel user : userModelPage.toList()){
+                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+            }
+        }
+
         return ResponseEntity.ok(userModelPage);
     }
 

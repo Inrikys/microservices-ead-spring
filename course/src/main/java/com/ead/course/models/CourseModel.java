@@ -4,12 +4,16 @@ import com.ead.course.enums.CourseLevel;
 import com.ead.course.enums.CourseStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -53,7 +57,12 @@ public class CourseModel implements Serializable {
     @Column(length = 255)
     private String imageUrl;
 
-//    private Set<ModuleModel> modules;
+    // Mapeado apenas para escrita, ou seja, não busca essa info no BD quando é feita
+    // a leitura, semelhante ao JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT) // tipo JOIN sobscreve o LAZY -> SUBSELECT = duas consultas, SELECT = várias, JOIN = uma só igual EAGER
+    private Set<ModuleModel> modules;
 
     public UUID getCourseId() {
         return courseId;

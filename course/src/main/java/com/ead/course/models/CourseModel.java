@@ -6,10 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -62,6 +60,7 @@ public class CourseModel implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT) // tipo JOIN sobscreve o LAZY -> SUBSELECT = duas consultas, SELECT = várias, JOIN = uma só igual EAGER
+    // @OnDelete(action = OnDeleteAction.CASCADE) // Delega a deleção em cascata para o DB
     private Set<ModuleModel> modules;
 
     public UUID getCourseId() {

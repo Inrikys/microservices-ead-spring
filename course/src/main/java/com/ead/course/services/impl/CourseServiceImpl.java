@@ -13,6 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -51,6 +53,29 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean existsByName(String name) {
         return courseRepository.existsByName(name);
+    }
+
+    @Override
+    public List<CourseModel> findAll() {
+        return courseRepository.findAll();
+    }
+
+    @Override
+    public Optional<CourseModel> findById(UUID courseId) {
+
+        Optional<CourseModel> optionalCourseModel = courseRepository.findById(courseId);
+
+        if (optionalCourseModel.isEmpty()) {
+
+        }
+
+        return optionalCourseModel;
+    }
+
+    @Override
+    public CourseModel update(CourseRecordDto courseRecordDto, CourseModel courseModel) {
+        BeanUtils.copyProperties(courseRecordDto, courseModel);
+        return courseRepository.save(courseModel);
     }
 
     private void deleteModules(List<ModuleModel> moduleModelList) {

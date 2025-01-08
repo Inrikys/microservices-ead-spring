@@ -50,6 +50,13 @@ public class CourseController {
     @PutMapping("/{courseId}")
     public ResponseEntity<Object> updateCourse(@PathVariable(value = "courseId") UUID courseId,
                                                @RequestBody @Valid CourseRecordDto courseRecordDto) {
-        return ResponseEntity.ok(courseService.update(courseRecordDto, courseService.findById(courseId).get()));
+
+        CourseModel courseModel = courseService.findById(courseId).get();
+
+        if (courseService.existsByName(courseRecordDto.name()) && !courseModel.getName().equals(courseRecordDto.name())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Course Name is Already Taken!");
+        }
+
+        return ResponseEntity.ok(courseService.update(courseRecordDto, courseModel));
     }
 }

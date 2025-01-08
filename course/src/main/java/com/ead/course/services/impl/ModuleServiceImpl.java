@@ -1,10 +1,13 @@
 package com.ead.course.services.impl;
 
+import com.ead.course.dtos.ModuleRecordDto;
+import com.ead.course.models.CourseModel;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
 import com.ead.course.services.ModuleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,5 +33,14 @@ public class ModuleServiceImpl implements ModuleService {
         }
 
         moduleRepository.delete(moduleModel);
+    }
+
+    @Override
+    public ModuleModel save(ModuleRecordDto moduleRecordDto, CourseModel courseModel) {
+        var moduleModel = new ModuleModel();
+        BeanUtils.copyProperties(moduleRecordDto, moduleModel);
+        moduleModel.setCourse(courseModel);
+
+        return moduleRepository.save(moduleModel);
     }
 }

@@ -23,7 +23,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public void delete(ModuleModel moduleModel) {
 
-        List<LessonModel> lessonModelList = lessonRepository.findAllLessonsIntoModule(module.getModuleId());
+        List<LessonModel> lessonModelList = lessonRepository.findAllLessonsIntoModule(moduleModel.getModuleId());
 
         if (!lessonModelList.isEmpty()) {
             lessonRepository.deleteAll(lessonModelList);

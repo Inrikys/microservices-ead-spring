@@ -59,9 +59,14 @@ public class CourseModel implements Serializable {
     // a leitura, semelhante ao JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT) // tipo JOIN sobscreve o LAZY -> SUBSELECT = duas consultas, SELECT = várias, JOIN = uma só igual EAGER
+    @Fetch(FetchMode.SUBSELECT)
+    // tipo JOIN sobscreve o LAZY -> SUBSELECT = duas consultas, SELECT = várias, JOIN = uma só igual EAGER
     // @OnDelete(action = OnDeleteAction.CASCADE) // Delega a deleção em cascata para o DB
     private Set<ModuleModel> modules;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private Set<CourseUserModel> coursesUsers;
 
     public UUID getCourseId() {
         return courseId;
@@ -133,5 +138,21 @@ public class CourseModel implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Set<ModuleModel> getModules() {
+        return modules;
+    }
+
+    public void setModules(Set<ModuleModel> modules) {
+        this.modules = modules;
+    }
+
+    public Set<CourseUserModel> getCoursesUsers() {
+        return coursesUsers;
+    }
+
+    public void setCoursesUsers(Set<CourseUserModel> coursesUsers) {
+        this.coursesUsers = coursesUsers;
     }
 }

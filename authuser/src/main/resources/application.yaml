@@ -17,3 +17,13 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  output: # Aplicar cores de logs no console em Windows
+    ansi:
+      enabled: Always
+
+logging:
+  level:
+    com.ead: TRACE #Pacote específico
+    root: INFO #Raiz da aplicação
+    org.springframework.web: DEBUG #Dependência/projeto específico
+    org.hibernate: INFO #Dependência/projeto específico

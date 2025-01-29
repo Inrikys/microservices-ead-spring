@@ -24,6 +24,15 @@ public class CourseUserModel implements Serializable {
     //Caso queira escolher o nome do atributo -> @JoinColumn(name = "course_id")
     private CourseModel course;
 
+    public CourseUserModel() {
+    }
+
+    public CourseUserModel(UUID id, UUID userId, CourseModel course) {
+        this.id = id;
+        this.userId = userId;
+        this.course = course;
+    }
+
     public UUID getId() {
         return id;
     }

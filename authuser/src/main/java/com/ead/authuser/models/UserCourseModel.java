@@ -23,6 +23,15 @@ public class UserCourseModel implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private UserModel user;
 
+    public UserCourseModel() {
+    }
+
+    public UserCourseModel(UUID id, UUID courseId, UserModel user) {
+        this.id = id;
+        this.courseId = courseId;
+        this.user = user;
+    }
+
     public UUID getId() {
         return id;
     }

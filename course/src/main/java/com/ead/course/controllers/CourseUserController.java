@@ -58,7 +58,6 @@ public class CourseUserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: User is blocked.");
         }
 
-        // Salvar matricula/inscricao do curso
         CourseUserModel courseUserModel = courseUserService
                 .saveAndSendSubscriptionUserInCourse(
                         courseModelOptional.get()

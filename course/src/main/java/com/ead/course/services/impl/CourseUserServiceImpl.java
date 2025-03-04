@@ -36,4 +36,15 @@ public class CourseUserServiceImpl implements CourseUserService {
 
         return courseUserModel;
     }
+
+    @Override
+    public boolean existsByUserId(UUID userId) {
+        return courseUserRepository.existsByUserId(userId);
+    }
+
+    @Transactional // importante, pois a exclusão é feita para mais de um registro
+    @Override
+    public void deleteAllByUserId(UUID userId) {
+        courseUserRepository.deleteAllByUserId(userId);
+    }
 }

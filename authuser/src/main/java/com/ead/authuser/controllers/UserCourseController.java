@@ -37,6 +37,8 @@ public class UserCourseController {
             @PageableDefault(sort = "courseId", direction = Sort.Direction.ASC) Pageable pageable,
             @PathVariable(value = "userId") UUID userId) {
 
+        userService.findById(userId);
+
         return ResponseEntity.ok(courseClient.getAllCoursesByUser(userId, pageable));
     }
 

@@ -86,6 +86,21 @@ public class AuthUserClient {
             logger.error("Error Request POST RestClient with cause: {}", exception.getMessage());
             throw new RuntimeException("Error request POST RestClient", exception);
         }
+    }
 
+    public void deleteCourseUserInAuthUser(UUID courseId) {
+        String url = baseUrlAuthUser + "/users/courses/" + courseId;
+        logger.debug("Request URL: {} ", url);
+
+        try {
+            restClient.delete()
+                    .uri(url)
+                    .retrieve()
+                    .toBodilessEntity();
+
+        } catch (RestClientException exception) {
+            logger.error("Error Request DELETET RestClient with cause: {}", exception.getMessage());
+            throw new RuntimeException("Error request DELETE RestClient", exception);
+        }
     }
 }

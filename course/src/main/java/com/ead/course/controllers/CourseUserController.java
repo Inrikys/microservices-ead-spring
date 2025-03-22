@@ -1,15 +1,11 @@
 package com.ead.course.controllers;
 
-import com.ead.course.clients.AuthUserClient;
 import com.ead.course.dtos.SubscriptionRecordDto;
-import com.ead.course.dtos.UserRecordDto;
-import com.ead.course.enums.UserStatus;
 import com.ead.course.models.CourseModel;
-import com.ead.course.models.CourseUserModel;
 import com.ead.course.services.CourseService;
-import com.ead.course.services.CourseUserService;
+import com.ead.course.services.UserService;
+import com.ead.course.specifications.SpecificationTemplate;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -23,24 +19,24 @@ import java.util.UUID;
 @RestController
 public class CourseUserController {
 
-    private final AuthUserClient authUserClient;
     private final CourseService courseService;
-    private final CourseUserService courseUserService;
+    private final UserService userService;
 
-    public CourseUserController(AuthUserClient authUserClient, CourseService courseService, CourseUserService courseUserService) {
-        this.authUserClient = authUserClient;
+    public CourseUserController(CourseService courseService, UserService userService) {
         this.courseService = courseService;
-        this.courseUserService = courseUserService;
+        this.userService = userService;
     }
 
     @GetMapping("/courses/{courseId}/users")
-    public ResponseEntity<Page<UserRecordDto>> getAllUsersByCourse(
+    public ResponseEntity<Object> getAllUsersByCourse(
+            SpecificationTemplate.UserSpec spec,
             @PageableDefault(sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
             @PathVariable(value = "courseId") UUID courseId) {
 
-        courseService.findById(courseId);
+        Optional<CourseModel> course = courseService.findById(courseId);
 
-        return ResponseEntity.ok(authUserClient.getAllUsersByCourse(courseId, pageable));
+        return ResponseEntity.ok(userService
+                .findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable));
     }
 
     @PostMapping("/courses/{courseId}/users/subscription")
@@ -49,36 +45,7 @@ public class CourseUserController {
             @RequestBody @Valid SubscriptionRecordDto subscriptionRecordDto) {
 
         Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
-
-        if (courseUserService.existsByCourseAndUserId(courseModelOptional.get(), subscriptionRecordDto.userId())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Subscription already exists!");
-        }
-
-        ResponseEntity<UserRecordDto> responseUser = authUserClient.getOneUserById(subscriptionRecordDto.userId());
-
-        if (responseUser.getBody().userStatus().equals(UserStatus.BLOCKED)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: User is blocked.");
-        }
-
-        CourseUserModel courseUserModel = courseUserService
-                .saveAndSendSubscriptionUserInCourse(
-                        courseModelOptional.get()
-                                .convertToCourseUserModel(subscriptionRecordDto.userId()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(courseUserModel);
+        // TODO: verificacoes com state transfer
+        return ResponseEntity.status(HttpStatus.CREATED).body("");
     }
-
-
-    @DeleteMapping("/courses/users/{userId}")
-    public ResponseEntity<Object> deleteCourseUserByUser(@PathVariable(value = "userId") UUID userId) {
-
-        if (!courseUserService.existsByUserId(userId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CourseUser not found.");
-        }
-
-        courseUserService.deleteAllByUserId(userId);
-
-        return ResponseEntity.ok("CourseUser deleted successfully");
-    }
-
 }

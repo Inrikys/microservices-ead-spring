@@ -1,14 +1,10 @@
 package com.ead.course.validations;
 
-import com.ead.course.clients.AuthUserClient;
 import com.ead.course.dtos.CourseRecordDto;
-import com.ead.course.dtos.UserRecordDto;
-import com.ead.course.enums.UserType;
 import com.ead.course.services.CourseService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -22,12 +18,10 @@ public class CourseValidator implements Validator {
 
     private final Validator validator;
     private final CourseService courseService;
-    private final AuthUserClient authUserClient;
 
-    public CourseValidator(@Qualifier("defaultValidator") Validator validator, CourseService courseService, AuthUserClient authUserClient) {
+    public CourseValidator(@Qualifier("defaultValidator") Validator validator, CourseService courseService) {
         this.validator = validator;
         this.courseService = courseService;
-        this.authUserClient = authUserClient;
     }
 
     @Override
@@ -57,13 +51,13 @@ public class CourseValidator implements Validator {
 
     private void validateUserInstructor(UUID userInstructor, Errors errors) {
 
-        ResponseEntity<UserRecordDto> responseUserInstructor = authUserClient.getOneUserById(userInstructor);
-
-        if (UserType.STUDENT.equals(responseUserInstructor.getBody().userType()) ||
-                UserType.USER.equals(responseUserInstructor.getBody().userType())) {
-            errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN");
-            logger.error("Error validation userInstructor: {}", userInstructor);
-        }
+//        ResponseEntity<UserRecordDto> responseUserInstructor = authUserClient.getOneUserById(userInstructor);
+//
+//        if (UserType.STUDENT.equals(responseUserInstructor.getBody().userType()) ||
+//                UserType.USER.equals(responseUserInstructor.getBody().userType())) {
+//            errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN");
+//            logger.error("Error validation userInstructor: {}", userInstructor);
+//        }
 
     }
 }

@@ -1,7 +1,6 @@
 package com.ead.authuser.controllers;
 
 import com.ead.authuser.dtos.UserRecordDto;
-import com.ead.authuser.exceptions.GlobalExceptionHandler;
 import com.ead.authuser.models.UserModel;
 import com.ead.authuser.services.UserService;
 import com.ead.authuser.specifications.SpecificationTemplate;
@@ -37,14 +36,11 @@ public class UserController {
     public ResponseEntity<Page<UserModel>> getAllUsers(
             //@PageableDefault(page = 0, size = 3, sort = "userId", direction = Sort.Direction.ASC) // config global em ResolverConfig
             SpecificationTemplate.UserSpec spec,
-            Pageable pageable,
-            @RequestParam(required = false) UUID courseId) {
+            Pageable pageable) {
 
         logger.debug("GET getAllUsers");
 
-        Page<UserModel> userModelPage = courseId != null
-                ? userService.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable)
-                : userService.findAll(spec, pageable);
+        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
 
         // HATEOAS
         if (!userModelPage.isEmpty()) {
@@ -104,5 +100,4 @@ public class UserController {
         logger.debug("PUT updateImage userRecordDto received {}", userRecordDto);
         return ResponseEntity.ok(userService.updateImage(userRecordDto, userService.findById(userId).get()));
     }
-
 }

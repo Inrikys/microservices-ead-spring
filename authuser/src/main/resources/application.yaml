@@ -23,6 +23,10 @@ spring:
     ansi:
       enabled: Always
 
+  rabbitmq:
+    addresses: amqps://xtnvanqr:c7vd38GMdl_Z56hvG9q_H-6nn5waHIDf@beaver.rmq.cloudamqp.com/xtnvanqr
+
+
 ead:
   api:
     url:
